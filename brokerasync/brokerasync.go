@@ -65,6 +65,7 @@ func (b *BrokerAsync) ReceiveOrErr() (<-chan string, <-chan error) {
 			ch <- msg
 			err <- nil
 		default:
+			ch <- ""
 			err <- errors.New("buffer underflow")
 		}
 	}()
