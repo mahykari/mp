@@ -1,5 +1,7 @@
 package brokersync
 
+import "errors"
+
 const BUFFER_SZ = 4
 
 type BrokerSync struct {
@@ -18,4 +20,22 @@ func (b *BrokerSync) Send(msg string) {
 
 func (b *BrokerSync) Receive() string {
 	return <-b.buffer
+}
+
+func (b *BrokerSync) SendOrErr(msg string) error {
+	select {
+	case b.buffer <- msg:
+		return nil
+	default:
+		return errors.New("buffer overflow")
+	}
+}
+
+func (b *BrokerSync) ReceiveOrErr() (string, error) {
+	select {
+	case msg := <-b.buffer:
+		return msg, nil
+	default:
+		return "", errors.New("buffer underflow")
+	}
 }

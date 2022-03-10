@@ -80,3 +80,17 @@ func TestSync(t *testing.T) {
 		log.Println("recieved", bs.Receive())
 	}
 }
+
+func TestBufferOverflow(t *testing.T) {
+	bs := NewBrokerSync()
+	for i := 0; i < BUFFER_SZ+1; i++ {
+		err := bs.SendOrErr("test" + fmt.Sprint(i))
+		log.Println("sent", i, "err", err)
+	}
+}
+
+func TestBufferUnderflow(t *testing.T) {
+	bs := NewBrokerSync()
+	msg, err := bs.ReceiveOrErr()
+	log.Printf("recieved \"%s\" err %s", msg, err)
+}
