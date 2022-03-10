@@ -56,11 +56,7 @@ func TestMultipleMessageSequential(t *testing.T) {
 	messages := []string{"test1", "test2", "test3"}
 
 	for _, msg := range messages {
-		ch := b.Send(msg)
-		done := <-ch
-		if !done {
-			t.Errorf("Expected true but got false")
-		}
+		<-b.Send(msg)
 	}
 
 	for i := 0; i < len(messages); i++ {
@@ -78,11 +74,7 @@ func TestMultipleMessageParallel(t *testing.T) {
 	for _, msg := range messages {
 		go func(x string) {
 			time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
-			ch := b.Send(x)
-			done := <-ch
-			if !done {
-				t.Errorf("Expected true but got false")
-			}
+			b.Send(x)
 		}(msg)
 	}
 
@@ -116,4 +108,24 @@ func TestAsync(t *testing.T) {
 	}
 
 	<-done
+}
+
+func TestBufferOverflow(t *testing.T) {
+	b := NewBrokerAsync()
+	for i := 0; i < BUFFER_SZ; i++ {
+		b.SendOrErr("test" + fmt.Sprint(i))
+	}
+
+	ch := b.SendOrErr("test" + fmt.Sprint(BUFFER_SZ))
+	if <-ch != nil {
+		t.Errorf("Expected nil but got %v", ch)
+	}
+}
+
+func TestBufferUnderflow(t *testing.T) {
+	b := NewBrokerAsync()
+	_, err := b.ReceiveOrErr()
+	if <-err == nil {
+		t.Errorf("Expected nil but got %v", err)
+	}
 }
