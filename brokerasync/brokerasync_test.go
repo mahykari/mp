@@ -1,6 +1,8 @@
 package brokerasync
 
 import (
+	"fmt"
+	"log"
 	"math/rand"
 	"testing"
 	"time"
@@ -90,4 +92,28 @@ func TestMultipleMessageParallel(t *testing.T) {
 			t.Errorf("Expected '%s' but got '%s'", messages[i], msg)
 		}
 	}
+}
+
+func TestAsync(t *testing.T) {
+	done := make(chan struct{})
+	b := NewBrokerAsync()
+	go func() {
+		ch := make([]<-chan bool, 2*BUFFER_SZ)
+		for i := 0; i < 2*BUFFER_SZ; i++ {
+			ch[i] = b.Send("test" + fmt.Sprint(i))
+			log.Println("sent", i)
+		}
+		for i := 0; i < 2*BUFFER_SZ; i++ {
+			<-ch[i]
+			log.Println("done", i)
+		}
+		done <- struct{}{}
+	}()
+
+	time.Sleep(time.Second * 2)
+	for i := 0; i < 2*BUFFER_SZ; i++ {
+		log.Println("recieved", <-b.Receive())
+	}
+
+	<-done
 }
