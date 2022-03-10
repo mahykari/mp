@@ -76,7 +76,7 @@ func TestSync(t *testing.T) {
 	}()
 
 	time.Sleep(time.Second * 2)
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 2*BUFFER_SZ; i++ {
 		log.Println("recieved", bs.Receive())
 	}
 }
