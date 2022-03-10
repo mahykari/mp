@@ -1,6 +1,6 @@
 package brokersync
 
-const BUFFER_SZ = 8
+const BUFFER_SZ = 4
 
 type BrokerSync struct {
 	buffer chan string

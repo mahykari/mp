@@ -69,7 +69,7 @@ func TestMultipleMessageParallel(t *testing.T) {
 func TestSync(t *testing.T) {
 	bs := NewBrokerSync()
 	go func() {
-		for i := 0; i < 10; i++ {
+		for i := 0; i < 2*BUFFER_SZ; i++ {
 			bs.Send("test" + fmt.Sprint(i))
 			log.Println("sent", i)
 		}
