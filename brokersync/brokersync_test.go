@@ -1,7 +1,10 @@
 package brokersync
 
 import (
+	"fmt"
+	"log"
 	"testing"
+	"time"
 )
 
 func TestSingleMessageSequential(t *testing.T) {
@@ -60,5 +63,20 @@ func TestMultipleMessageParallel(t *testing.T) {
 		if messages[i] != recieved[i] {
 			t.Error("Expected '" + messages[i] + "'")
 		}
+	}
+}
+
+func TestSync(t *testing.T) {
+	bs := NewBrokerSync()
+	go func() {
+		for i := 0; i < 10; i++ {
+			bs.Send("test" + fmt.Sprint(i))
+			log.Println("sent", i)
+		}
+	}()
+
+	time.Sleep(time.Second * 2)
+	for i := 0; i < 10; i++ {
+		log.Println("recieved", bs.Receive())
 	}
 }
