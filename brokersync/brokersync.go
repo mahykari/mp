@@ -30,12 +30,3 @@ func (b *BrokerSync) SendOrErr(msg string) error {
 		return errors.New("buffer overflow")
 	}
 }
-
-func (b *BrokerSync) ReceiveOrErr() (string, error) {
-	select {
-	case msg := <-b.buffer:
-		return msg, nil
-	default:
-		return "", errors.New("buffer underflow")
-	}
-}
