@@ -1,4 +1,4 @@
-package brokerasync
+package broker_async
 
 import "errors"
 
