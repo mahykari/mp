@@ -52,23 +52,3 @@ func (b *BrokerAsync) SendOrErr(msg string) <-chan error {
 
 	return done
 }
-
-func (b *BrokerAsync) ReceiveOrErr() (<-chan string, <-chan error) {
-	ch := make(chan string)
-	err := make(chan error)
-
-	go func() {
-		defer close(ch)
-		defer close(err)
-		select {
-		case msg := <-b.buffer:
-			ch <- msg
-			err <- nil
-		default:
-			ch <- ""
-			err <- errors.New("buffer underflow")
-		}
-	}()
-
-	return ch, err
-}

@@ -112,9 +112,3 @@ func TestBufferOverflow(t *testing.T) {
 		log.Println("sent", i, "err", <-ch)
 	}
 }
-
-func TestBufferUnderflow(t *testing.T) {
-	b := NewBrokerAsync()
-	msg, err := b.ReceiveOrErr()
-	log.Printf("received \"%s\" err %v", <-msg, <-err)
-}
