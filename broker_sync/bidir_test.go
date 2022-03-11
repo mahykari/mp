@@ -1,4 +1,4 @@
-package brokersync
+package broker_sync
 
 import (
 	"log"
