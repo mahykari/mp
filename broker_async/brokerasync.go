@@ -2,7 +2,7 @@ package broker_async
 
 import "errors"
 
-const BUFFER_SZ = 4
+const BUFFER_SZ = 2
 
 type BrokerAsync struct {
 	buffer chan string

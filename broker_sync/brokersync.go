@@ -2,7 +2,7 @@ package broker_sync
 
 import "errors"
 
-const BUFFER_SZ = 4
+const BUFFER_SZ = 2
 
 type BrokerSync struct {
 	buffer chan string
