@@ -1,6 +1,6 @@
 # MP
 
-Implementation of a message broker with Go.
+Implementation of a message broker in Go.
 
 ## Requirements
 
